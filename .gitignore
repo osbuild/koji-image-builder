@@ -1,0 +1,9 @@
+/data
+/tls-secrets
+/*.egg-info
+/.coverage
+/.manage.conf.sh
+/.tox
+/.venv
+/*.tar.gz
+__pycache__
