@@ -16,6 +16,7 @@ BuildArch:      noarch
 Summary:        Koji integration plugins for image-builder
 
 BuildRequires:  python3-devel
+BuildRequires:  python3-pytest python3-pytest-mock
 
 %description
 Koji integration plugins for image-builder.
@@ -52,7 +53,7 @@ Koji cli plugin for image-cli integration.
 # nothing to do
 
 %check
-# nothing to do, yet
+pytest test/unit
 
 %install
 install -d %{buildroot}/%{_prefix}/lib/koji-hub-plugins
