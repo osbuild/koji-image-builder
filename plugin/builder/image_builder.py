@@ -5,8 +5,6 @@
 # easier. The eventual goal for the `image-builder` tasks is to be upstreamed
 # into `koji` itself but first they have to prove themselves stability wise.
 
-# TODO: renaming output artifacts (michael working on PR!)
-
 import os
 import json
 import logging
@@ -423,6 +421,7 @@ class ImageBuilderBuildArchTask(BaseBuildTask):
                 cmd.extend(["--ostree-parent", ostree_parent])
 
         cmd.extend(["--output-dir", "/builddir/output"])
+        cmd.extend(["--output-name", f"{name}-{version}-{release}"])
 
         # Finally we add the types we want built to the command as well.
         cmd += types
