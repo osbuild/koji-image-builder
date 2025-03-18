@@ -41,7 +41,6 @@ Koji builder plugin for image-builder integration.
 Summary:        Koji cli plugin for image-cli integration
 Requires:       %{name} = %{version}-%{release}
 Requires:       koji-cli
-Requires:       image-builder >= 14
 
 %description    cli
 Koji cli plugin for image-cli integration.
