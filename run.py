@@ -267,7 +267,7 @@ def run(path):
             "./db:/docker-entrypoint-initdb.d:z",
             "-v",
             "../koji:/opt:z",
-            "postgres:12",
+            "docker.io/library/postgres:12",
         ],
         cwd=pathlib.Path(path) / "koji-container-dev",
     )
