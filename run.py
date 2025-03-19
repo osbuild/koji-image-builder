@@ -66,7 +66,7 @@ def pre_clone(path):
             "clone",
             "--depth",
             "1",
-            "/home/user/src/fedora/koji",
+            "https://pagure.io/koji",
             "koji",
         ],
         cwd=pathlib.Path(path),
