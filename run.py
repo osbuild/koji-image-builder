@@ -77,11 +77,6 @@ def pre_patch(path):
     """Apply patches to the integration testing checkouts."""
 
     shutil.copyfile(
-        "./test/data/confs/hub/hub.conf",
-        pathlib.Path(path) / "koji-container-dev/hub/koji-hub/hub.conf",
-    )
-
-    shutil.copyfile(
         "./test/data/confs/builder/kojid.conf",
         pathlib.Path(path) / "koji-container-dev/builder/kojid.conf",
     )
@@ -151,30 +146,6 @@ def pre_setup(path):
             "certs/certs",
         ],
         cwd=pathlib.Path(path) / "koji-container-dev",
-    )
-
-    # copy hub
-    print("- setup: certificates (hub)")
-    run_quiet(
-        ["mkdir", "hub/certs"], cwd=pathlib.Path(path) / "koji-container-dev"
-    )
-
-    shutil.copy(
-        pathlib.Path(path)
-        / "koji-container-dev/certs/certs/root-ca/koji-ca.crt",
-        pathlib.Path(path) / "koji-container-dev/hub/certs/koji-ca.crt",
-    )
-
-    shutil.copy(
-        pathlib.Path(path)
-        / "koji-container-dev/certs/certs/localhost/localhost.crt",
-        pathlib.Path(path) / "koji-container-dev/hub/certs/koji-hub.crt",
-    )
-
-    shutil.copy(
-        pathlib.Path(path)
-        / "koji-container-dev/certs/certs/localhost/localhost.key",
-        pathlib.Path(path) / "koji-container-dev/hub/certs/koji-hub.key",
     )
 
     # copy builder
@@ -288,16 +259,15 @@ def run(path):
             "--security-opt",
             "label=disable",
             "-v",
-            "./basedir:/mnt/koji:z",
+            f"{path}/koji-container-dev/basedir:/mnt/koji:z",
             "-v",
-            "./hub:/opt/cfg:z",
+            "./test/data/confs/hub:/opt/cfg:z",
             "-v",
-            "../koji:/opt/koji",
+            f"{path}/koji:/opt/koji",
             "koji-image-builder",
             "/bin/sh",
             "/opt/cfg/entrypoint.sh",
-        ],
-        cwd=pathlib.Path(path) / "koji-container-dev",
+        ]
     )
 
     print("- run: hub (wait)")
