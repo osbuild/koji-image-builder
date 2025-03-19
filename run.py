@@ -76,11 +76,6 @@ def pre_clone(path):
 def pre_patch(path):
     """Apply patches to the integration testing checkouts."""
 
-    shutil.copyfile(
-        "./test/data/confs/builder/kojid.conf",
-        pathlib.Path(path) / "koji-container-dev/builder/kojid.conf",
-    )
-
     print("- patch: copying comps")
     shutil.copyfile(
         "./test/data/comps.xml",
@@ -146,19 +141,6 @@ def pre_setup(path):
             "certs/certs",
         ],
         cwd=pathlib.Path(path) / "koji-container-dev",
-    )
-
-    # copy builder
-    print("- setup: certificates (builder)")
-    run_quiet(
-        ["mkdir", "builder/certs"],
-        cwd=pathlib.Path(path) / "koji-container-dev",
-    )
-
-    shutil.copy(
-        pathlib.Path(path)
-        / "koji-container-dev/certs/certs/kojibuilder/kojibuilder.pem",
-        pathlib.Path(path) / "koji-container-dev/builder/certs/kojibuilder.pem",
     )
 
     # copy kojira
@@ -326,11 +308,11 @@ def run(path):
             "--pod",
             "koji-dev",
             "-v",
-            "./basedir:/mnt/koji:z",
+            f"{path}/koji-container-dev/basedir:/mnt/koji:z",
             "-v",
-            "./builder:/opt/cfg:z",
+            "./test/data/confs/builder:/opt/cfg:z",
             "-v",
-            "../koji:/opt/koji",
+            f"{path}/koji:/opt/koji",
             "-v",
             f"{path}/mock:/var/lib/mock:rw",
             "--env",
@@ -339,7 +321,6 @@ def run(path):
             "/bin/sh",
             "/opt/cfg/entrypoint.sh",
         ],
-        cwd=pathlib.Path(path) / "koji-container-dev",
     )
 
     print("- run: start kojira")
