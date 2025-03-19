@@ -336,6 +336,11 @@ def run(path):
 
     print("- run: start builder")
     run_quiet(
+        ["mkdir", "mock"],
+        cwd=pathlib.Path(path),
+    )
+
+    run_quiet(
         [
             "podman",
             "run",
@@ -357,7 +362,7 @@ def run(path):
             "-v",
             "../koji:/opt/koji",
             "-v",
-            "/home/user/mock:/var/lib/mock:rw",
+            f"{path}/mock:/var/lib/mock:rw",
             "--env",
             "HOSTIP=127.0.0.1",
             "koji-image-builder",
