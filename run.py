@@ -112,7 +112,7 @@ def pre_setup(path):
             "basedir/scratch",
             "db/data",
         ],
-        cwd=pathlib.Path(path) / "koji-container-dev",
+        cwd=pathlib.Path(path),
     )
 
     print("- setup: basedir (chmod)")
@@ -123,7 +123,7 @@ def pre_setup(path):
             "777",
             "basedir",
         ],
-        cwd=pathlib.Path(path) / "koji-container-dev",
+        cwd=pathlib.Path(path),
     )
 
     print("- setup: certificates")
@@ -204,14 +204,13 @@ def run(path):
             "-e",
             "DB_SCHEMA=/opt/schemas/schema.sql",
             "-v",
-            "./db/data:/var/lib/postgresql/data:z",
+            f"{path}/db/data:/var/lib/postgresql/data:z",
             "-v",
-            "./db:/docker-entrypoint-initdb.d:z",
+            f"./test/data/confs/database:/docker-entrypoint-initdb.d:z",
             "-v",
-            "../koji:/opt:z",
+            f"{path}/koji:/opt:z",
             "docker.io/library/postgres:12",
         ],
-        cwd=pathlib.Path(path) / "koji-container-dev",
     )
 
     time.sleep(1)
@@ -230,7 +229,7 @@ def run(path):
             "--security-opt",
             "label=disable",
             "-v",
-            f"{path}/koji-container-dev/basedir:/mnt/koji:z",
+            f"{path}/basedir:/mnt/koji:z",
             "-v",
             "./test/data/confs/hub:/opt/cfg:z",
             "-v",
@@ -297,7 +296,7 @@ def run(path):
             "--pod",
             "koji-dev",
             "-v",
-            f"{path}/koji-container-dev/basedir:/mnt/koji:z",
+            f"{path}/basedir:/mnt/koji:z",
             "-v",
             "./test/data/confs/builder:/opt/cfg:z",
             "-v",
@@ -326,7 +325,7 @@ def run(path):
             "label=disable",
             "--cap-add=SYS_ADMIN",
             "-v",
-            f"{path}/koji-container-dev/basedir:/mnt/koji:z",
+            f"{path}/basedir:/mnt/koji:z",
             "-v",
             "./test/data/confs/kojira:/opt/cfg:z",
             "-v",
