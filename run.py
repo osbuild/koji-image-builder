@@ -143,17 +143,6 @@ def pre_setup(path):
         cwd=pathlib.Path(path) / "koji-container-dev",
     )
 
-    # copy kojira
-    print("- setup: certificates (kojira)")
-    run_quiet(
-        ["mkdir", "kojira/certs"], cwd=pathlib.Path(path) / "koji-container-dev"
-    )
-
-    shutil.copy(
-        pathlib.Path(path) / "koji-container-dev/certs/certs/kojira/kojira.pem",
-        pathlib.Path(path) / "koji-container-dev/kojira/certs/kojira.pem",
-    )
-
     print("- setup: config")
     with open(pathlib.Path(path) / "koji-container-dev/config.local", "w") as f:
         p = pathlib.Path(path) / "koji"
@@ -337,18 +326,17 @@ def run(path):
             "label=disable",
             "--cap-add=SYS_ADMIN",
             "-v",
-            "./basedir:/mnt/koji:z",
+            f"{path}/koji-container-dev/basedir:/mnt/koji:z",
             "-v",
-            "./kojira:/opt/cfg:z",
+            "./test/data/confs/kojira:/opt/cfg:z",
             "-v",
-            "../koji:/opt/koji",
+            f"{path}/koji:/opt/koji",
             "--name",
             "koji-kojira",
             "koji-image-builder",
             "/bin/sh",
             "/opt/cfg/entrypoint.sh",
         ],
-        cwd=pathlib.Path(path) / "koji-container-dev",
     )
 
 
