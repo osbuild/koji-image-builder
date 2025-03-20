@@ -82,6 +82,12 @@ def pre_patch(path):
         pathlib.Path(path) / "koji-container-dev/scripts/f33_comps.xml",
     )
 
+    print("- patch: copying buildroot setup script")
+    shutil.copyfile(
+        "./test/data/scripts/setup_fedora_buildroot",
+        pathlib.Path(path) / "koji-container-dev/scripts/setup_fedora_buildroot",
+    )
+
     # Add our modules
     print("- patch: copying plugins: builder")
     shutil.copyfile(
@@ -155,6 +161,8 @@ def pre_build(path):
         ["podman", "build", "-t", "koji-image-builder", "."],
         cwd="./test/data",
     )
+
+
 
 
 def prune(path):
@@ -356,6 +364,10 @@ def build(path):
         )
     except KeyboardInterrupt:
         pass
+    except subprocess.CalledProcessError:
+        print("error, staying")
+        while True:
+            time.sleep(1)
 
 
 def loop(path):

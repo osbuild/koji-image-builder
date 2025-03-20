@@ -1,0 +1,23 @@
+#!/bin/bash
+set +x
+
+cd ../cli
+
+KOJI=./koji
+if [ $1 ] ; then
+    FEDORA_VERSION=$1
+else
+    FEDORA_VERSION=39
+fi
+echo $FEDORA_VERSION
+ARCH=x86_64
+REPO=https://kojipkgs.fedoraproject.org/compose/$FEDORA_VERSION/latest-Fedora-$FEDORA_VERSION/compose/Everything/$ARCH/os/
+
+$KOJI add-tag fedora-$FEDORA_VERSION
+$KOJI add-tag fedora-$FEDORA_VERSION-build --arches=$ARCH
+$KOJI add-tag-inheritance fedora-$FEDORA_VERSION fedora-$FEDORA_VERSION-build
+$KOJI add-external-repo -t fedora-$FEDORA_VERSION-build fedora-$FEDORA_VERSION-released $REPO
+$KOJI add-external-repo -t fedora-$FEDORA_VERSION-build image-builder-$FEDORA_VERSION-main https://download.copr.fedorainfracloud.org/results/@osbuild/image-builder/fedora-$FEDORA_VERSION-$ARCH/
+$KOJI add-target fedora-$FEDORA_VERSION  fedora-$FEDORA_VERSION-build fedora-$FEDORA_VERSION
+$KOJI import-comps ../scripts/f33_comps.xml fedora-$FEDORA_VERSION-build
+$KOJI regen-repo fedora-$FEDORA_VERSION-build
