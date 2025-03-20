@@ -37,12 +37,6 @@ def run_quiet(args, **kwargs):
         raise
 
 
-def pre_unit():
-    """Run the normal (quick) unittests first."""
-    print("- test: unit")
-    run_quiet(["pytest", "test/unit"])
-
-
 def pre_clone(path):
     """Clone the integration testing repository."""
 
@@ -364,10 +358,6 @@ def build(path):
         )
     except KeyboardInterrupt:
         pass
-    except subprocess.CalledProcessError:
-        print("error, staying")
-        while True:
-            time.sleep(1)
 
 
 def loop(path):
@@ -396,8 +386,6 @@ def border():
 
 
 def main():
-    pre_unit()
-
     test = "test" in sys.argv
     stay = "stay" in sys.argv
 
@@ -417,10 +405,18 @@ def main():
 
         if test:
             border()
-            build(path)
 
-            if stay:
-                loop(path)
+            try:
+                build(path)
+            except subprocess.CalledProcessError as e:
+                if stay:
+                    print(e)
+                    print(e.stdout)
+                    print(e.stderr)
+                    print("error during build, staying")
+                    loop(path)
+                else:
+                    raise
         else:
             loop(path)
 
