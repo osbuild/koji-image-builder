@@ -398,7 +398,8 @@ def border():
 def main():
     pre_unit()
 
-    test = len(sys.argv) > 1 and sys.argv[1] == "test"
+    test = "test" in sys.argv
+    stay = "stay" in sys.argv
 
     with tempfile.TemporaryDirectory() as path:
         pre_clone(path)  # clone
@@ -417,6 +418,9 @@ def main():
         if test:
             border()
             build(path)
+
+            if stay:
+                loop(path)
         else:
             loop(path)
 
