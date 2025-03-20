@@ -16,8 +16,8 @@ REPO=https://kojipkgs.fedoraproject.org/compose/$FEDORA_VERSION/latest-Fedora-$F
 $KOJI add-tag fedora-$FEDORA_VERSION
 $KOJI add-tag fedora-$FEDORA_VERSION-build --arches=$ARCH
 $KOJI add-tag-inheritance fedora-$FEDORA_VERSION fedora-$FEDORA_VERSION-build
-$KOJI add-external-repo -t fedora-$FEDORA_VERSION-build fedora-$FEDORA_VERSION-released $REPO
 $KOJI add-external-repo -t fedora-$FEDORA_VERSION-build image-builder-$FEDORA_VERSION-main https://download.copr.fedorainfracloud.org/results/@osbuild/image-builder/fedora-$FEDORA_VERSION-$ARCH/
+$KOJI add-external-repo -t fedora-$FEDORA_VERSION-build fedora-$FEDORA_VERSION-released $REPO
 $KOJI add-target fedora-$FEDORA_VERSION  fedora-$FEDORA_VERSION-build fedora-$FEDORA_VERSION
 $KOJI import-comps ../scripts/f33_comps.xml fedora-$FEDORA_VERSION-build
 $KOJI regen-repo fedora-$FEDORA_VERSION-build
