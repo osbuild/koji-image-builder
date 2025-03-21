@@ -54,6 +54,79 @@ def cli(args):
     ] + args
 
 
+def koji_setup(path):
+    print("- run: setup koji")
+
+    run_quiet(cli(["add-tag", "fedora-42"]))
+    run_quiet(cli(["add-tag", "fedora-42-build", "--arches", "x86_64"]))
+    run_quiet(
+        cli(
+            [
+                "add-tag-inheritance",
+                "fedora-42",
+                "fedora-42-build",
+            ]
+        )
+    )
+    run_quiet(
+        cli(
+            [
+                "add-external-repo",
+                "-t",
+                "fedora-42-build",
+                "image-builder-42-main https://download.copr.fedorainfracloud.org/results/@osbuild/image-builder/fedora-42-x86_64/",
+            ]
+        )
+    )
+    run_quiet(
+        cli(
+            [
+                "add-external-repo",
+                "-t",
+                "fedora-42-build",
+                "fedora-42-released",
+                "https://kojipkgs.fedoraproject.org/compose/42/latest-Fedora-42/compose/Everything/x86_64/os/",
+            ]
+        )
+    )
+    run_quiet(cli(["add-target", "fedora-42", "fedora-42-build", "fedora-42"]))
+    run_quiet(cli(["add-group", "fedora-42-build", "image-builder-build"]))
+    run_quiet(
+        cli(
+            [
+                "add-group-pkg",
+                "fedora-42-build",
+                "image-builder-build",
+                "image-builder",
+            ]
+        )
+    )
+
+    run_quiet(
+        cli(["grant-permission", "repo", "kojira"]),
+    )
+
+    run_quiet(
+        cli(["edit-tag", "-x", "mock.new_chroot=0", "fedora-42-build"]),
+    )
+
+    run_quiet(
+        cli(
+            [
+                "add-pkg",
+                "--owner",
+                "kojiadmin",
+                "fedora-42",
+                "Fedora-Minimal",
+            ]
+        ),
+    )
+
+    run_quiet(cli(["regen-repo", "fedora-42-build"]))
+
+    pass
+
+
 def pre_clone(path):
     """Clone the integration testing repository."""
 
@@ -86,20 +159,6 @@ def pre_clone(path):
 
 def pre_patch(path):
     """Apply patches to the integration testing checkouts."""
-
-    # TODO THESE CAN MOVE
-    print("- patch: copying comps")
-    shutil.copyfile(
-        "./test/data/comps.xml",
-        pathlib.Path(path) / "koji-container-dev/scripts/f33_comps.xml",
-    )
-
-    print("- patch: copying buildroot setup script")
-    shutil.copyfile(
-        "./test/data/scripts/setup_fedora_buildroot",
-        pathlib.Path(path)
-        / "koji-container-dev/scripts/setup_fedora_buildroot",
-    )
 
     # Add our modules
     print("- patch: copying plugins: builder")
@@ -262,34 +321,7 @@ def run(path):
     print("- run: hub (wait)")
     time.sleep(2.5)
 
-    print("- run: setup tags")
-    run_quiet(
-        ["./setup_fedora_buildroot", "42"],
-        cwd=pathlib.Path(path) / "koji-container-dev/scripts",
-    )
-
-    print("- run: grant permissions to kojira")
-    run_quiet(
-        cli(["grant-permission", "repo", "kojira"]),
-    )
-
-    print("- run: set buildroot options")
-    run_quiet(
-        cli(["edit-tag", "-x", "mock.new_chroot=0", "fedora-42-build"]),
-    )
-
-    print("- run: add pkg")
-    run_quiet(
-        cli(
-            [
-                "add-pkg",
-                "--owner",
-                "kojiadmin",
-                "fedora-42",
-                "Fedora-Minimal",
-            ]
-        ),
-    )
+    koji_setup(path)
 
     print("- run: start builder")
     run_quiet(
@@ -369,7 +401,6 @@ def build(path):
                     "minimal-raw",
                 ]
             ),
-            cwd=pathlib.Path(path) / "koji-container-dev/cli",
             check=True,
         )
     except KeyboardInterrupt:
