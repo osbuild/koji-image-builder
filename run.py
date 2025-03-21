@@ -130,19 +130,6 @@ def koji_setup(path):
 def pre_clone(path):
     """Clone the integration testing repository."""
 
-    print("- clone: koji-container-dev")
-    run_quiet(
-        [
-            "git",
-            "clone",
-            "--depth",
-            "1",
-            "https://github.com/tkopecek/koji-container-dev",
-            "koji-container-dev",
-        ],
-        cwd=pathlib.Path(path),
-    )
-
     print("- clone: koji")
     run_quiet(
         [
@@ -203,28 +190,6 @@ def pre_setup(path):
         ],
         cwd=pathlib.Path(path),
     )
-
-    print("- setup: certificates")
-    shutil.copytree(
-        "./test/data/certs",
-        pathlib.Path(path) / "koji-container-dev/certs/certs",
-    )
-
-    print("- setup: certificates (chmod)")
-    run_quiet(
-        [
-            "chmod",
-            "-R",
-            "777",
-            "certs/certs",
-        ],
-        cwd=pathlib.Path(path) / "koji-container-dev",
-    )
-
-    print("- setup: config")
-    with open(pathlib.Path(path) / "koji-container-dev/config.local", "w") as f:
-        p = pathlib.Path(path) / "koji"
-        f.write(f"CODEDIR='{p!s}'")
 
 
 def pre_build(path):
@@ -420,7 +385,7 @@ def info(path):
         "koji has started, kojiweb is available at http://localhost:8080/koji and"
     )
     print(
-        f"the koji cli is available at {path}/koji-container-dev/cli to interact"
+        f"the koji cli is available in the `koji-image-builder` container at `/opt/cli`"
     )
     print("press ctrl+C to exit and tear down")
 
