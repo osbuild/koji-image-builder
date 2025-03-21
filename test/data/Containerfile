@@ -6,6 +6,7 @@ RUN \
     dnf-plugins-core \
     git \
     httpd \
+    koji \
     mc \
     mock \
     mod_auth_gssapi \
@@ -15,6 +16,7 @@ RUN \
     python3-dateutil \
     python3-defusedxml \
     python3-flake8 \
+    python3-koji-cli-plugins \
     python3-librepo \
     python3-mod_wsgi \
     python3-multilib \
@@ -29,6 +31,9 @@ RUN \
 RUN mkdir /etc/mock/koji && \
     adduser kojibuilder -G mock -s /usr/sbin/nologin && \
     echo "config_opts['use_bootstrap'] = False" >> /etc/mock/site-defaults.cfg
+
+# client
+RUN mkdir /etc/cli
 
 # hub + web
 RUN rm -f /etc/httpd/conf/httpd.conf ;\

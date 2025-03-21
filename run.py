@@ -37,6 +37,23 @@ def run_quiet(args, **kwargs):
         raise
 
 
+def cli(args):
+    return [
+        "podman",
+        "run",
+        "--pod",
+        "koji-dev",
+        "--rm",
+        "-v",
+        "./test/data/confs/cli:/opt/cli:z",
+        "-v",
+        "./plugin/cli/image_builder.py:/usr/lib/python3.13/site-packages/koji_cli_plugins/image_builder.py:z",
+        "-it",
+        "koji-image-builder",
+        "/opt/cli/koji",
+    ] + args
+
+
 def pre_clone(path):
     """Clone the integration testing repository."""
 
@@ -70,6 +87,7 @@ def pre_clone(path):
 def pre_patch(path):
     """Apply patches to the integration testing checkouts."""
 
+    # TODO THESE CAN MOVE
     print("- patch: copying comps")
     shutil.copyfile(
         "./test/data/comps.xml",
@@ -79,7 +97,8 @@ def pre_patch(path):
     print("- patch: copying buildroot setup script")
     shutil.copyfile(
         "./test/data/scripts/setup_fedora_buildroot",
-        pathlib.Path(path) / "koji-container-dev/scripts/setup_fedora_buildroot",
+        pathlib.Path(path)
+        / "koji-container-dev/scripts/setup_fedora_buildroot",
     )
 
     # Add our modules
@@ -155,8 +174,6 @@ def pre_build(path):
         ["podman", "build", "-t", "koji-image-builder", "."],
         cwd="./test/data",
     )
-
-
 
 
 def prune(path):
@@ -253,27 +270,25 @@ def run(path):
 
     print("- run: grant permissions to kojira")
     run_quiet(
-        ["./koji", "grant-permission", "repo", "kojira"],
-        cwd=pathlib.Path(path) / "koji-container-dev/cli",
+        cli(["grant-permission", "repo", "kojira"]),
     )
 
     print("- run: set buildroot options")
     run_quiet(
-        ["./koji", "edit-tag", "-x", "mock.new_chroot=0", "fedora-42-build"],
-        cwd=pathlib.Path(path) / "koji-container-dev/cli",
+        cli(["edit-tag", "-x", "mock.new_chroot=0", "fedora-42-build"]),
     )
 
     print("- run: add pkg")
     run_quiet(
-        [
-            "./koji",
-            "add-pkg",
-            "--owner",
-            "kojiadmin",
-            "fedora-42",
-            "Fedora-Minimal",
-        ],
-        cwd=pathlib.Path(path) / "koji-container-dev/cli",
+        cli(
+            [
+                "add-pkg",
+                "--owner",
+                "kojiadmin",
+                "fedora-42",
+                "Fedora-Minimal",
+            ]
+        ),
     )
 
     print("- run: start builder")
@@ -345,14 +360,15 @@ def build(path):
     # Do a build, wait for it to exit succesfully
     try:
         subprocess.run(
-            [
-                "./koji",
-                "image-builder-build",
-                "fedora-42",
-                "Fedora-Minimal",
-                "42",
-                "minimal-raw",
-            ],
+            cli(
+                [
+                    "image-builder-build",
+                    "fedora-42",
+                    "Fedora-Minimal",
+                    "42",
+                    "minimal-raw",
+                ]
+            ),
             cwd=pathlib.Path(path) / "koji-container-dev/cli",
             check=True,
         )
@@ -367,9 +383,14 @@ def loop(path):
     except KeyboardInterrupt:
         pass
 
+
 def info(path):
-    print("koji has started, kojiweb is available at http://localhost:8080/koji and")
-    print(f"the koji cli is available at {path}/koji-container-dev/cli to interact")
+    print(
+        "koji has started, kojiweb is available at http://localhost:8080/koji and"
+    )
+    print(
+        f"the koji cli is available at {path}/koji-container-dev/cli to interact"
+    )
     print("press ctrl+C to exit and tear down")
 
 
@@ -405,18 +426,10 @@ def main():
 
         if test:
             border()
+            build(path)
 
-            try:
-                build(path)
-            except subprocess.CalledProcessError as e:
-                if stay:
-                    print(e)
-                    print(e.stdout)
-                    print(e.stderr)
-                    print("error during build, staying")
-                    loop(path)
-                else:
-                    raise
+            if stay:
+                loop(path)
         else:
             loop(path)
 

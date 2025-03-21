@@ -1,0 +1,11 @@
+[koji]
+server = https://localhost:443/kojihub
+weburl = http://localhost:80/koji
+topurl = http://localhost:80/kojifiles
+
+authtype = ssl
+cert = /opt/cli/client.pem
+serverca = /opt/cli/server-ca.crt
+
+;plugins = runroot save_failed_tree
+;pluginpath = /root/koji/plugins/cli
