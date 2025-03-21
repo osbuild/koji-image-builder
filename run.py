@@ -11,6 +11,8 @@ import shutil
 import shlex
 import sys
 
+COMPOSE_REPO = "https://kojipkgs.fedoraproject.org/compose/42/latest-Fedora-42/compose/Everything/x86_64/os/"
+
 
 def run_quiet(args, **kwargs):
     print(" ", shlex.join(args))
@@ -85,7 +87,7 @@ def koji_setup(path):
                 "-t",
                 "fedora-42-build",
                 "fedora-42-released",
-                "https://kojipkgs.fedoraproject.org/compose/42/latest-Fedora-42/compose/Everything/x86_64/os/",
+                COMPOSE_REPO,
             ]
         )
     )
@@ -97,6 +99,18 @@ def koji_setup(path):
                 "add-group-pkg",
                 "fedora-42-build",
                 "image-builder-build",
+                "image-builder",
+            ]
+        )
+    )
+
+    run_quiet(cli(["add-group", "fedora-42-build", "core"]))
+    run_quiet(
+        cli(
+            [
+                "add-group-pkg",
+                "fedora-42-build",
+                "core",
                 "image-builder",
             ]
         )
@@ -360,6 +374,7 @@ def build(path):
             cli(
                 [
                     "image-builder-build",
+                    "--repo", COMPOSE_REPO,
                     "fedora-42",
                     "Fedora-Minimal",
                     "42",
