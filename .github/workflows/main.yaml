@@ -12,3 +12,5 @@ concurrency:
 jobs:
   integration:
     uses: ./.github/workflows/integration.yaml
+  unit:
+    uses: ./.github/workflows/unit.yaml
