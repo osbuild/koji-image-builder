@@ -10,7 +10,5 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  integration:
-    uses: ./.github/workflows/integration.yaml
-  unit:
-    uses: ./.github/workflows/unit.yaml
+  test:
+    uses: ./.github/workflows/test.yaml
