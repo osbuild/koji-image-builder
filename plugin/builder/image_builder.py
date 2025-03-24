@@ -188,6 +188,7 @@ class ImageBuilderBuildTask(BuildImageTask):
                         arch,
                         types,
                         target_info,
+                        build_config,
                         repo_info,
                         self.opts,
                     ],
@@ -276,13 +277,13 @@ class ImageBuilderBuildArchTask(BaseBuildTask):
         arch,
         types,
         target_info,
+        build_config,
         repo_info,
         opts=None,
     ):
         self.opts = {} if opts is None else opts
 
         build_tag_id = target_info["build_tag"]
-        build_config = self.session.getBuildConfig(build_tag_id)
 
         # When running in "simple" or "old" mock isolation modes we need to
         # request `mock` to mount `/dev` for us. We don't *always* need access
