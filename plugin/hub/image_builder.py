@@ -96,14 +96,13 @@ def imageBuilderBuild(
     priority=None,
 ):
     """Create an image via image-builder"""
-    # XXX why?
-    # context.session.assertPerm("image")
+    context.session.assertPerm("image")
 
     if opts is None:
         opts = {}
 
     args = [target, arches, types, name, version, opts]
-    task = {"channel": "image", "owner": 1}  # XXX remove?
+    task = {"channel": "image"}
 
     logger.info("creating imageBuilderBuild task")
 

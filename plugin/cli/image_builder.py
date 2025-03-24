@@ -14,6 +14,11 @@ def handle_image_builder_build(gopts, session, args):
     )
 
     parser = kl.OptionParser(usage=usage)
+
+    kl.activate_session(session, gopts)
+    if not session.hasPerm("image") and not session.hasPerm("admin"):
+        parser.error("this action requires image or admin privileges")
+
     parser.add_option(
         "--scratch",
         action="store_true",
