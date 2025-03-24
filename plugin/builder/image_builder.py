@@ -440,9 +440,10 @@ class ImageBuilderBuildArchTask(BaseBuildTask):
         # And execute it. The exception message here might look very terse
         # however all output from the build root is logged and attached as log
         # files to the task.
-        if broot.mock(
+        exit_code = broot.mock(
             ["--cwd", broot.tmpdir(within=True), "--chroot", "--"] + cmd
-        ):
+        )
+        if exit_code != 0:
             raise koji.GenericError("`image-builder` failed")
 
         # We have done our build, now it is time to massage our outputs into
