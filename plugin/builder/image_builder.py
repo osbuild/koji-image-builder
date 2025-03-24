@@ -144,7 +144,8 @@ class ImageBuilderBuildTask(BuildImageTask):
         else:
             # However, when specific architectures *are* requested we verify
             # that those are defined for the build tag.
-            if diff := set(arches) - arches_for_config(build_config):
+            diff = set(arches) - arches_for_config(build_config)
+            if diff:
                 raise koji.BuildError(
                     "Unsupported architecture(s): " + str(diff)
                 )
@@ -367,7 +368,8 @@ class ImageBuilderBuildArchTask(BaseBuildTask):
         # root and pass it on to `image-builder`. This allows for customizing
         # images. Likely not to be used in practice, but useful for scratch
         # builds and testing.
-        if blueprint := self.opts.get("blueprint"):
+        blueprint = self.opts.get("blueprint")
+        if blueprint:
             path = broot.tmpdir()
             koji.ensuredir(path)
 
@@ -386,12 +388,14 @@ class ImageBuilderBuildArchTask(BaseBuildTask):
         # override this to do a cross-distro build. Note that this will likely
         # always need additional repositories containing the right content
         # to be passed along as well.
-        if distro := self.opts.get("distro"):
+        distro = self.opts.get("distro")
+        if distro:
             cmd.extend(["--distro", distro])
 
         # Set up repositories that are being used. If there were optional
         # repos provided we use those, otherwise we use the targets repo
-        if repos := self.opts.get("repos", []):
+        repos = self.opts.get("repos", [])
+        if repos:
             for repo in repos:
                 cmd.extend(["--force-repo", repo])
         else:
@@ -412,12 +416,18 @@ class ImageBuilderBuildArchTask(BaseBuildTask):
         )
 
         # If ostree information is available pass it on to the command
-        if ostree := self.opts.get("ostree"):
-            if ostree_url := ostree.get("url"):
+        ostree = self.opts.get("ostree")
+        if ostree:
+            ostree_url = ostree.get("url")
+            if ostree_url:
                 cmd.extend(["--ostree-url", ostree_url])
-            if ostree_ref := ostree.get("ref"):
+
+            ostree_ref = ostree.get("url")
+            if ostree_ref:
                 cmd.extend(["--ostree-ref", ostree_ref])
-            if ostree_parent := ostree.get("parent"):
+
+            ostree_parent = ostree.get("parent")
+            if ostree_parent:
                 cmd.extend(["--ostree-parent", ostree_parent])
 
         cmd.extend(["--output-dir", "/builddir/output"])
