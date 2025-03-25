@@ -40,11 +40,11 @@ def test_build_arch_task(koji_mock_kojid):
     assert koji_mock_kojid.buildroot.mock_calls == [
         [
             "--cwd",
-            "/tmp/buildroot",
+            str(koji_mock_kojid.buildroot._tmpdir),
             "--chroot",
             "--",
             "sh",
-            "/tmp/buildroot/mock-wrap",
+            str(koji_mock_kojid.buildroot._tmpdir) + "/mock-wrap",
             "image-builder",
             "-v",
             "build",

@@ -19,7 +19,7 @@ class MockBuildRoot:
         pass
 
     def tmpdir(self, within=False):
-        return "/tmp/buildroot"
+        return self._tmpdir
 
     def rootdir(self):
         return ""
@@ -34,7 +34,7 @@ class MockBuildRoot:
 
 
 @pytest.fixture
-def koji_mock_kojid(mocker):
+def koji_mock_kojid(mocker, tmpdir):
     """Provide things that are *usually* imported from `__main__` in koji
     builder plugins. Which means that `__main__` resolves to `kojid`."""
 
@@ -43,5 +43,6 @@ def koji_mock_kojid(mocker):
     mocker.patch("__main__.BuildRoot", MockBuildRoot, create=True)
 
     mocker.buildroot = MockBuildRoot
+    mocker.buildroot._tmpdir = tmpdir
 
     return mocker
