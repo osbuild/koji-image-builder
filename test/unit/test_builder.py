@@ -108,7 +108,7 @@ def test_build_arch_task_ostree(koji_mock_kojid):
             "--ostree-url",
             "https://kojipkgs.fedoraproject.org/compose/iot/repo/",
             "--ostree-ref",
-            "fedora/rawhide/$arch/iot",
+            "fedora/rawhide/x86_64/iot",
             "--output-dir",
             "/builddir/output",
             "--output-name",

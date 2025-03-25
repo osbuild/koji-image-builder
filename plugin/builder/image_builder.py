@@ -425,6 +425,10 @@ class ImageBuilderBuildArchTask(BaseBuildTask):
 
             ostree_ref = ostree.get("ref")
             if ostree_ref:
+                # Replace `$arch`, see:
+                # https://github.com/osbuild/image-builder-cli/issues/165
+                ostree_ref = ostree_ref.replace("$arch", arch)
+
                 cmd.extend(["--ostree-ref", ostree_ref])
 
             ostree_parent = ostree.get("parent")
