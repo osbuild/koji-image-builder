@@ -434,17 +434,27 @@ class ImageBuilderBuildArchTask(BaseBuildTask):
         cmd.extend(["--output-dir", "/builddir/output"])
         cmd.extend(["--output-name", f"{name}-{version}-{release}"])
 
-        # Finally we add the types we want built to the command as well.
-        cmd += types
-
         # And execute it. The exception message here might look very terse
         # however all output from the build root is logged and attached as log
         # files to the task.
-        exit_code = broot.mock(
-            ["--cwd", broot.tmpdir(within=True), "--chroot", "--"] + cmd
-        )
-        if exit_code != 0:
-            raise koji.GenericError("`image-builder` failed")
+
+        # We execute one time for each image type that's requested, in the
+        # future `image-builder` will likely grow support to output multiple
+        # types at the same time and we will adjust the code as necessary.
+
+        # This is mostly useful for scratch builds as it reduces build time
+        # by quite a lot since `image-builder` does a lot of caching between
+        # pipelines.
+
+        # Pungi does not yet understand multiple artifacts in a single build
+        # so for composes we'll always receive a single type.
+
+        for typ in types:
+            exit_code = broot.mock(
+                ["--cwd", broot.tmpdir(within=True), "--chroot", "--"] + cmd + [typ]
+            )
+            if exit_code != 0:
+                raise koji.GenericError("`image-builder` failed")
 
         # We have done our build, now it is time to massage our outputs into
         # the correct formats that koji understands and to make sure we give
