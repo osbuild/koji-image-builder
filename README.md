@@ -1,8 +1,5 @@
 # koji-image-builder
 
-> [!WARNING]  
-> This is a work-in-progress repository. There is no CI, nor is there any guarantees. Work can be pushed directly to main. We hope to transition out of this soon.
-
 This project provides [`image-builder`](https://github.com/osbuild/image-builder-cli) integration with [Koji](https://pagure.io/koji). `image-builder` is a tool that builds images (as the name says).
 
 ## koji configuration
