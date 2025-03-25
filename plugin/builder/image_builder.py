@@ -423,7 +423,7 @@ class ImageBuilderBuildArchTask(BaseBuildTask):
             if ostree_url:
                 cmd.extend(["--ostree-url", ostree_url])
 
-            ostree_ref = ostree.get("url")
+            ostree_ref = ostree.get("ref")
             if ostree_ref:
                 cmd.extend(["--ostree-ref", ostree_ref])
 
