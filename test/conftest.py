@@ -10,6 +10,8 @@ class MockBuildImageTask:
 
 
 class MockBuildRoot:
+    mock_calls = []
+
     def __init__(self, *args, **kwargs):
         pass
 
@@ -17,7 +19,7 @@ class MockBuildRoot:
         pass
 
     def tmpdir(self, within=False):
-        return ""
+        return "/tmp/buildroot"
 
     def rootdir(self):
         return ""
@@ -26,6 +28,8 @@ class MockBuildRoot:
         pass
 
     def mock(self, args):
+        self.mock_calls.append(args)
+
         return 0
 
 
@@ -37,5 +41,7 @@ def koji_mock_kojid(mocker):
     mocker.patch("__main__.BaseBuildTask", MockBaseBuildTask, create=True)
     mocker.patch("__main__.BuildImageTask", MockBuildImageTask, create=True)
     mocker.patch("__main__.BuildRoot", MockBuildRoot, create=True)
+
+    mocker.buildroot = MockBuildRoot
 
     return mocker

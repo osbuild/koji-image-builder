@@ -37,6 +37,30 @@ def test_build_arch_task(koji_mock_kojid):
         {},
     )
 
+    assert koji_mock_kojid.buildroot.mock_calls == [
+        [
+            "--cwd",
+            "/tmp/buildroot",
+            "--chroot",
+            "--",
+            "sh",
+            "/tmp/buildroot/mock-wrap",
+            "image-builder",
+            "-v",
+            "build",
+            "--use-librepo=false",
+            "--force-repo",
+            "//repos/f42-build/1/$arch",
+            "--with-sbom",
+            "--with-manifest",
+            "--output-dir",
+            "/builddir/output",
+            "--output-name",
+            "Fedora-Minimal-42-1",
+            "minimal-raw",
+        ],
+    ]
+
 
 def test_build_arch_task_with_data_url_is_exception(koji_mock_kojid):
     import plugin.builder.image_builder as builder
