@@ -45,4 +45,6 @@ def koji_mock_kojid(mocker, tmpdir):
     mocker.buildroot = MockBuildRoot
     mocker.buildroot._tmpdir = tmpdir
 
+    mocker.buildroot.mock_calls = []
+
     return mocker
