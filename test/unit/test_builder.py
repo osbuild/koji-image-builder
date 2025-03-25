@@ -61,6 +61,72 @@ def test_build_arch_task(koji_mock_kojid):
         ],
     ]
 
+def test_build_arch_task_multiple_types(koji_mock_kojid):
+    import plugin.builder.image_builder as builder
+
+    t = builder.ImageBuilderBuildArchTask()
+
+    t.id = None
+    t.session = None
+    t.options = MockOptions(topurl="/")
+    t.workdir = None
+
+    t.handler(
+        "Fedora-Minimal",
+        "42",
+        "1",
+        "x86_64",
+        ["minimal-raw", "minimal-raw-zst"],
+        {"build_tag": "f42-build", "build_tag_name": "f42-build"},
+        {"extra": {"mock.new_chroot": 0}},
+        {"id": 1},
+        {},
+    )
+
+    assert koji_mock_kojid.buildroot.mock_calls == [
+        [
+            "--cwd",
+            str(koji_mock_kojid.buildroot._tmpdir),
+            "--chroot",
+            "--",
+            "sh",
+            str(koji_mock_kojid.buildroot._tmpdir) + "/mock-wrap",
+            "image-builder",
+            "-v",
+            "build",
+            "--use-librepo=false",
+            "--force-repo",
+            "//repos/f42-build/1/$arch",
+            "--with-sbom",
+            "--with-manifest",
+            "--output-dir",
+            "/builddir/output",
+            "--output-name",
+            "Fedora-Minimal-42-1",
+            "minimal-raw",
+        ],
+        [
+            "--cwd",
+            str(koji_mock_kojid.buildroot._tmpdir),
+            "--chroot",
+            "--",
+            "sh",
+            str(koji_mock_kojid.buildroot._tmpdir) + "/mock-wrap",
+            "image-builder",
+            "-v",
+            "build",
+            "--use-librepo=false",
+            "--force-repo",
+            "//repos/f42-build/1/$arch",
+            "--with-sbom",
+            "--with-manifest",
+            "--output-dir",
+            "/builddir/output",
+            "--output-name",
+            "Fedora-Minimal-42-1",
+            "minimal-raw-zst",
+        ],
+    ]
 
 def test_build_arch_task_ostree(koji_mock_kojid):
     import plugin.builder.image_builder as builder
