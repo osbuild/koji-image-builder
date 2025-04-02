@@ -87,5 +87,5 @@ install -p -m 0644 plugin/cli/image_builder.py %{buildroot}%{python3_sitelib}/ko
 # the changelog is distribution-specific, therefore there's just one entry
 # to make rpmlint happy.
 
-* Mon Mar 17 2025 Simon de Vlieger <supakeen@redhat.com> - 0-1
+* Mon Mar 17 2025 Simon de Vlieger <supakeen@redhat.com> - 1-1
 - On this day, this project was born.
