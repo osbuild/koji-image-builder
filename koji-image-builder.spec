@@ -59,11 +59,11 @@ Koji cli plugin for image-cli integration.
 %install
 install -d %{buildroot}/%{_prefix}/lib/koji-hub-plugins
 install -p -m 0755 plugin/hub/image_builder.py %{buildroot}/%{_prefix}/lib/koji-hub-plugins/
-%py_byte_compile %{__python3} %{buildroot}/%{_prefix}/lib/koji-hub-plugins/image_builder.py
+%py_byte_compile %{python3} %{buildroot}/%{_prefix}/lib/koji-hub-plugins/image_builder.py
 
 install -d %{buildroot}/%{_prefix}/lib/koji-builder-plugins
 install -p -m 0755 plugin/builder/image_builder.py %{buildroot}/%{_prefix}/lib/koji-builder-plugins/
-%py_byte_compile %{__python3} %{buildroot}/%{_prefix}/lib/koji-builder-plugins/image_builder.py
+%py_byte_compile %{python3} %{buildroot}/%{_prefix}/lib/koji-builder-plugins/image_builder.py
 
 install -d %{buildroot}/%{python3_sitelib}/koji_cli_plugins
 install -p -m 0644 plugin/cli/image_builder.py %{buildroot}%{python3_sitelib}/koji_cli_plugins/image_builder.py
