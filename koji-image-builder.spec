@@ -54,7 +54,7 @@ Koji cli plugin for image-cli integration.
 # nothing to do
 
 %check
-pytest test/unit
+%pytest test/unit
 
 %install
 install -d %{buildroot}/%{_prefix}/lib/koji-hub-plugins
