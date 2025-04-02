@@ -67,7 +67,6 @@ install -p -m 0755 plugin/builder/image_builder.py %{buildroot}/%{_prefix}/lib/k
 
 install -d %{buildroot}/%{python3_sitelib}/koji_cli_plugins
 install -p -m 0644 plugin/cli/image_builder.py %{buildroot}%{python3_sitelib}/koji_cli_plugins/image_builder.py
-%py_byte_compile %{__python3} %{buildroot}%{python3_sitelib}/koji_cli_plugins/image_builder.py
 
 %files
 %license LICENSE
@@ -82,8 +81,7 @@ install -p -m 0644 plugin/cli/image_builder.py %{buildroot}%{python3_sitelib}/ko
 %{_prefix}/lib/koji-builder-plugins/__pycache__/image_builder.*
 
 %files cli
-%{python3_sitelib}/koji_cli_plugins/image_builder.py
-%{python3_sitelib}/koji_cli_plugins/__pycache__/image_builder.*
+%pycached %{python3_sitelib}/koji_cli_plugins/image_builder.py
 
 %changelog
 # the changelog is distribution-specific, therefore there's just one entry
