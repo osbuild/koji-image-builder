@@ -25,7 +25,7 @@ Koji integration plugins for image-builder.
 %package        hub
 Summary:        Koji hub plugin for image-builder integration
 Requires:       %{name} = %{version}-%{release}
-Requires:       koji-hub
+Requires:       koji-hub koji-hub-plugins
 Requires:       python3-jsonschema
 
 %description    hub
@@ -34,7 +34,7 @@ Koji hub plugin for image-builder integration.
 %package        builder
 Summary:        Koji builder plugin for image-builder integration
 Requires:       %{name} = %{version}-%{release}
-Requires:       koji-builder
+Requires:       koji-builder koji-builder-plugins
 
 %description    builder
 Koji builder plugin for image-builder integration.
@@ -42,7 +42,7 @@ Koji builder plugin for image-builder integration.
 %package        cli
 Summary:        Koji cli plugin for image-cli integration
 Requires:       %{name} = %{version}-%{release}
-Requires:       koji-cli
+Requires:       koji-cli koji-cli-plugins
 
 %description    cli
 Koji cli plugin for image-cli integration.
