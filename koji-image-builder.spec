@@ -15,9 +15,9 @@ BuildArch:      noarch
 
 Summary:        Koji integration plugins for image-builder
 
-BuildRequires:  python3dist(koji)
 BuildRequires:  python3-devel
-BuildRequires:  python3-pytest python3-pytest-mock
+BuildRequires:  python3dist(koji)
+BuildRequires:  python3dist(pytest) python3dist(pytest-mock)
 
 %description
 Koji integration plugins for image-builder.
