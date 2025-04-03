@@ -1,6 +1,6 @@
 %global forgeurl https://github.com/osbuild/koji-image-builder
 
-Version:        1
+Version:        3
 
 %forgemeta
 
