@@ -79,6 +79,10 @@ IMAGE_BUILDER_BUILD_SCHEMA = {
                     "type": "object",
                     "description": "Blueprint",
                 },
+                "seed": {
+                    "type": "integer",
+                    "description": "PRNG seed, can be used to predict filesystem UUIDs",
+                },
             },
         },
     },
