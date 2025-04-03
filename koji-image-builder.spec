@@ -42,7 +42,7 @@ Koji builder plugin for image-builder integration.
 %package        cli
 Summary:        Koji cli plugin for image-cli integration
 Requires:       %{name} = %{version}-%{release}
-Requires:       koji-cli koji-cli-plugins
+Requires:       koji python3-koji-cli-plugins
 
 %description    cli
 Koji cli plugin for image-cli integration.
