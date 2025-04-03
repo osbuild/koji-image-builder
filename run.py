@@ -76,6 +76,16 @@ def koji_setup(path):
                 "add-external-repo",
                 "-t",
                 "fedora-42-build",
+                "osbuild-42-main https://download.copr.fedorainfracloud.org/results/@osbuild/osbuild/fedora-42-x86_64/",
+            ]
+        )
+    )
+    run_quiet(
+        cli(
+            [
+                "add-external-repo",
+                "-t",
+                "fedora-42-build",
                 "image-builder-42-main https://download.copr.fedorainfracloud.org/results/@osbuild/image-builder/fedora-42-x86_64/",
             ]
         )
