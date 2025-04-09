@@ -2,18 +2,31 @@
 
 This project provides [`image-builder`](https://github.com/osbuild/image-builder-cli) integration with [Koji](https://pagure.io/koji). `image-builder` is a tool that builds images (as the name says).
 
-## Installation and Configuration
+## Installation
 
-To use `koji-image-builder` you need the following things for your `koji` instance:
+To use `koji-image-builder` you'll need to install the relevant plugin package for each corresponding service.
 
-1. Install `koji-image-builder-builder` on your builders (those that run `kojid`).
-2. Enable the `image_builder` plugin in your builder configuration (`/etc/kojid/kojid.conf`).
-3. Install `koji-image-builder-hub` on your hub.
-2. Enable the `image_builder` plugin in your hub configuration (`/etc/koji-hub/hub.conf`).
+### Builder
 
-Once this is done you can proceed to configuring your instance:
+Install `koji-image-builder-builder` on your builders (the machines that run `kojid`). After installation enable the service by adding to, or updating its configuration file at `/etc/kojid/kojid.conf`.
 
-1. Create the `image-builder-build` group which contains `image-builder` and `distribution-gpg-keys`.
+```
+plugins = image_builder
+```
+
+### Hub
+
+Install `koji-image-builder-hub` on your hub. After installation enable the service by adding to, or updating its configuration file at `/etc/koji-hub/hub.conf`.
+
+```
+Plugins = image_builder
+```
+
+## Configuration
+
+Once you have installed the plugins you can proceed to configuring your instance. The below should be adapted to your own tag and target setup. This example is based on Fedora's setup.
+
+1. Create an `image-builder-build` group which contains `image-builder` and `distribution-gpg-keys`.
 2. Create `fXX-image-builder-build` tags, which contain the `image-builder-build` group and have `mock.new_chroot` set to `0`.
 3. Create `fXX-image-builder` targets, which use the `fXX-image-builder-build` tags as their build tag and the `fXX` tag as their target.
 4. Add the `image-builder-build` group to your build tag.
