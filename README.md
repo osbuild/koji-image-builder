@@ -19,10 +19,6 @@ Once this is done you can proceed to configuring your instance:
 4. Add the `image-builder-build` group to your build tag.
 4. Create packages for the things you want to build in the target tag, for example `Fedora-Minimal`
 
-# TODO
-
-- patch koji to accept zst (docs/schema.sql, archivetypes table + migration?)
-
 ## Test
 
 ## Unit
