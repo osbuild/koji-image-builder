@@ -35,7 +35,7 @@ $ pytest test/unit
 These tests set up a full containerized `koji` environment and does image builds in it. `sudo` is required for this. The tests take long, especially if the containers need to be built. The following does a quick smoke test by setting up the entire environment and doing a build from the command line.
 
 ```console
-$ python3 run.py test
+$ sudo python3 run.py test
 # ...
 ```
 
