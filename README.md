@@ -32,6 +32,30 @@ Once you have installed the plugins you can proceed to configuring your instance
 4. Add the `image-builder-build` group to your build tag.
 4. Create packages for the things you want to build in the target tag, for example `Fedora-Minimal`
 
+## Usage
+
+On a machine that has access to your koji instance in the `image` channel (or is an `admin`) install `koji-image-builder` which will provide the command line plugin. You can then perform a build with the following command, provided you adjust the values to how you configured your tags, targets, and package names.
+
+```console
+$ koji image-builder-build --repo "https://some/compose/repo" fedora-42 Fedora-Minimal 42 minimal-raw
+# ... output ...
+```
+
+The values mean the following:
+
+```console
+$ koji image-builder-build --repo "Repository used to source packages from for the build" $distribution $package-to-store-build $package-version $imagetype
+# ... output ...
+```
+
+
+More options are listed under the `--help` argument:
+
+```
+$ koji image-builder-build --help
+# ... output ...
+```
+
 ## Test
 
 ### Unit
