@@ -21,18 +21,21 @@ jobs:
       - fedora-branched  # rawhide updates are created automatically
       - epel-10
       - epel-9
+      - epel-8
   - job: koji_build
     trigger: commit
     dist_git_branches:
       - fedora-all
       - epel-10
       - epel-9
+      - epel-8
   - job: propose_downstream
     trigger: release
     dist_git_branches:
       - fedora-all
       - epel-10
       - epel-9
+      - epel-8
   - job: copr_build
     trigger: pull_request
     targets: &build_targets
@@ -40,6 +43,10 @@ jobs:
       - fedora-all-s390x
       - fedora-all-ppc64le
       - fedora-all
+      - epel-8-aarch64
+      - epel-8-s380x
+      - epel-8-ppc64le
+      - epel-8-x86_64
       - epel-9-aarch64
       - epel-9-s390x
       - epel-9-ppc64le
