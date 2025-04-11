@@ -74,6 +74,12 @@ def handle_image_builder_build(gopts, session, args):
         help="Provide a blueprint to customize the build. This is a path to a JSON file",
     )
 
+    parser.add_option(
+        "--seed",
+        help="Set a seed. Influences repeatability of generated UUIDs.",
+        type=int,
+    )
+
     (opts, args) = parser.parse_args(args)
 
     if len(args) < 4:
@@ -116,6 +122,9 @@ def handle_image_builder_build(gopts, session, args):
 
     if opts.distro:
         task_opts["distro"] = opts.distro
+
+    if opts.seed:
+        task_opts["seed"] = opts.seed
 
     if opts.blueprint:
         with open(opts.blueprint, "r") as f:
