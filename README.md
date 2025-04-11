@@ -34,7 +34,7 @@ Once you have installed the plugins you can proceed to configuring your instance
 
 ## Usage
 
-On a machine that has access to your koji instance in the `image` channel (or is an `admin`) install `koji-image-builder` which will provide the command line plugin. You can then perform a build with the following command, provided you adjust the values to how you configured your tags, targets, and package names.
+On a machine that has access to your koji instance in the `image` channel (or is an `admin`) install `koji-image-builder-cli` which will provide the command line plugin. You can then perform a build with the following command, provided you adjust the values to how you configured your tags, targets, and package names.
 
 ```console
 $ koji image-builder-build --repo "https://some/compose/repo" fedora-42 Fedora-Minimal 42 minimal-raw
