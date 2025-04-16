@@ -398,6 +398,13 @@ class ImageBuilderBuildArchTask(BaseBuildTask):
         repos = self.opts.get("repos", [])
         if repos:
             for repo in repos:
+                # Note the manual DNF variable replacement here, this is to
+                # work around an underlying issue in the dependency solver used
+                # by `osbuild` and a fix is underway in `osbuild` itself; however
+                # because the plugin is disconnected dependency wise from the
+                # buildroot we also apply replacement here, naively.
+                repo = repo.replace("$arch", arch)
+
                 cmd.extend(["--force-repo", repo])
         else:
             cmd.extend(
