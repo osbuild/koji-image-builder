@@ -404,6 +404,7 @@ class ImageBuilderBuildArchTask(BaseBuildTask):
                 # because the plugin is disconnected dependency wise from the
                 # buildroot we also apply replacement here, naively.
                 repo = repo.replace("$arch", arch)
+                repo = repo.replace("$basearch", arch)
 
                 cmd.extend(["--force-repo", repo])
         else:
