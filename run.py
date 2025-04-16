@@ -11,7 +11,7 @@ import shutil
 import shlex
 import sys
 
-COMPOSE_REPO = "https://kojipkgs.fedoraproject.org/compose/42/latest-Fedora-42/compose/Everything/x86_64/os/"
+COMPOSE_REPO = "https://kojipkgs.fedoraproject.org/compose/42/latest-Fedora-42/compose/Everything/$arch/os/"
 
 
 def run_quiet(args, **kwargs):
