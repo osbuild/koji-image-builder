@@ -80,7 +80,7 @@ def test_build_arch_task_with_repos(koji_mock_kojid):
         {"build_tag": "f42-build", "build_tag_name": "f42-build"},
         {"extra": {"mock.new_chroot": 0}},
         {"id": 1},
-        {"repos": ["a/$arch/b"]},
+        {"repos": ["a/$arch/b", "c/$basearch/d"]},
     )
 
     assert koji_mock_kojid.buildroot.mock_calls == [
@@ -97,6 +97,8 @@ def test_build_arch_task_with_repos(koji_mock_kojid):
             "--use-librepo=false",
             "--force-repo",
             "a/x86_64/b",
+            "--force-repo",
+            "c/x86_64/d",
             "--with-sbom",
             "--with-manifest",
             "--output-dir",
