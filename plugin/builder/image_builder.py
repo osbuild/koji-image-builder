@@ -444,7 +444,7 @@ class ImageBuilderBuildArchTask(BaseBuildTask):
                 cmd.extend(["--ostree-parent", ostree_parent])
 
         cmd.extend(["--output-dir", "/builddir/output"])
-        cmd.extend(["--output-name", f"{name}-{version}-{release}"])
+        cmd.extend(["--output-name", f"{name}-{version}-{release}.{arch}"])
 
         # And execute it. The exception message here might look very terse
         # however all output from the build root is logged and attached as log

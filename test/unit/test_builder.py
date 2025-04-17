@@ -56,7 +56,7 @@ def test_build_arch_task(koji_mock_kojid):
             "--output-dir",
             "/builddir/output",
             "--output-name",
-            "Fedora-Minimal-42-1",
+            "Fedora-Minimal-42-1.x86_64",
             "minimal-raw",
         ],
     ]
@@ -104,7 +104,7 @@ def test_build_arch_task_with_repos(koji_mock_kojid):
             "--output-dir",
             "/builddir/output",
             "--output-name",
-            "Fedora-Minimal-42-1",
+            "Fedora-Minimal-42-1.x86_64",
             "minimal-raw",
         ],
     ]
@@ -150,7 +150,7 @@ def test_build_arch_task_multiple_types(koji_mock_kojid):
             "--output-dir",
             "/builddir/output",
             "--output-name",
-            "Fedora-Minimal-42-1",
+            "Fedora-Minimal-42-1.x86_64",
             "minimal-raw",
         ],
         [
@@ -171,7 +171,7 @@ def test_build_arch_task_multiple_types(koji_mock_kojid):
             "--output-dir",
             "/builddir/output",
             "--output-name",
-            "Fedora-Minimal-42-1",
+            "Fedora-Minimal-42-1.x86_64",
             "minimal-raw-zst",
         ],
     ]
@@ -227,7 +227,7 @@ def test_build_arch_task_ostree(koji_mock_kojid):
             "--output-dir",
             "/builddir/output",
             "--output-name",
-            "Fedora-Minimal-42-1",
+            "Fedora-Minimal-42-1.x86_64",
             "minimal-raw",
         ],
     ]
