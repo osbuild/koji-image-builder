@@ -443,6 +443,11 @@ class ImageBuilderBuildArchTask(BaseBuildTask):
             if ostree_parent:
                 cmd.extend(["--ostree-parent", ostree_parent])
 
+        # If a seed is set, set it
+        seed = opts.get("seed", None)
+        if seed is not None:
+            cmd.extend(["--seed", str(seed)])
+
         cmd.extend(["--output-dir", "/builddir/output"])
         cmd.extend(["--output-name", f"{name}-{version}-{release}.{arch}"])
 
