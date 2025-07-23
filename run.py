@@ -388,7 +388,7 @@ def build(path):
                     "fedora-42",
                     "Fedora-Minimal",
                     "42",
-                    "minimal-raw",
+                    "minimal-raw-xz",
                 ]
             ),
             check=True,
