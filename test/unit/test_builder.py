@@ -301,7 +301,7 @@ def test_build_arch_task_seed(koji_mock_kojid):
             "--output-dir",
             "/builddir/output",
             "--output-name",
-            "Fedora-Minimal-42-1",
+            "Fedora-Minimal-42-1.x86_64",
             "minimal-raw",
         ],
     ]
