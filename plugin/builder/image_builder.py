@@ -482,7 +482,7 @@ class ImageBuilderBuildArchTask(BaseBuildTask):
             "task_id": self.id,
             "name": name,
             "version": version,
-            "release": distro,
+            "release": release,
             "arch": arch,
             "files": [],
             "logs": [],
