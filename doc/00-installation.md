@@ -48,5 +48,40 @@ Tasks = ...,imageBuilderBuild,imageBuilderBuildArch
 And make sure that the `ParentTasks` list contains `imageBuilderBuild`:
 
 ```
-ParentTasks = ...,imageBuilderBuild`
+ParentTasks = ...,imageBuilderBuild
 ```
+
+## Koji Setup
+
+After you've finished the infrastructure part of your deployment it's time to configure Koji so tasks can be submitted and processed. The commands here are to be executed as a user with administrative privileges on your relevant Koji instance. Take the examples and adjust them to what's appropriate for your setup.
+
+To start with you need a tag you're going to use to build images in, this can be a pre-existing tag, or a new one. You might want to set up tag inheritance to appropriate other tags but this is setup dependent.
+
+```
+# Create a new tag
+$ koji add-tag image-builder-build
+
+# Set the tag to use 'old chroots', `image-builder` needs loopback devices and these do
+# not work with 'new chroot'.
+$ koji edit-tag -x mock.new_chroot=0 image-builder-build
+```
+
+You likely already have tags you want to build images for. You can add a target for those:
+
+```
+# Add the target `target-name` which takes the `image-builder-build` build tag
+# and tags builds into `destination-tag`
+$ koji add-target target-name image-builder-build destination-tag
+```
+
+Your build tag needs some packages in it, so let's configure a group for it:
+
+```
+# Add the `image-builder` group to the `image-builder-build` tag
+$ koji add-group image-builder-build image-builder
+
+# Add the `image-builder` package to the `image-builder` group in the `image-builder-build` tag
+$ koji add-group-pkg image-builder-build image-builder image-builder
+```
+
+After this you should be able to build images with `image-builder` in the `image-builder-build` tag.
