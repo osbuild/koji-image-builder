@@ -1,0 +1,52 @@
+# Installation
+
+`koji-image-builder` is comprised of several (sub) packages that need to be deployed on the various parts
+that make up your [Koji](https://docs.pagure.org/koji/) installation. Installing `koji-image-builder` provides the `imageBuilderBuild` and `imageBuilderBuildArch` task types.
+
+`koji-image-builder` and its subpackages are available in Fedora, EPEL 8, EPEL 9, and EPEL 10 and can be installed through `dnf`. `image-builder` itself needs to be available in the Koji tags (buildroots) you want to use to build images. `image-builder` is packaged for Fedora, CentOS, and RHEL starting with 9.7 and 10.1.
+
+The installation section is comprised of two parts, one is to install the appropriate packages in the right places and to configure them to be enabled. The second part is the general Koji configuration regarding tags and groups and such.
+
+## Infrastructure
+
+While every Koji deployment is slightly different it might be useful to take a look at the pull requests that enabled `koji-image-builder` on [Fedora](https://pagure.io/fedora-infra/ansible/pull-request/2579#request_diff).
+
+### Hub
+
+On the machines that act as the 'hub' in `koji` you want to install the `koji-image-builder-hub` package.
+
+#### Configuration
+
+In your `hub.conf` make sure that `image_builder` is included in the list of `Plugins`:
+
+```
+Plugins = ... image_builder
+```
+
+### Builder
+
+On all builders that you want to be able to serve tasks of the `imageBuilderBuild`, or `imageBuilderBuildArch` types you should install the `koji-image-builder-builder` package. If you're using specific Koji channels for image builds that means all machines in those channels.
+
+#### Configuration
+
+In your `kojid.conf` make sure that `image_builder` is included in the list of `Plugins`:
+
+```
+Plugins = ... image_builder
+```
+
+Restart `kojid` afterwards.
+
+### Web
+
+On the machines that host your Koji's web interface you want to make sure the tasks are listed in the configuration. Make sure that the `Tasks` list contains `imageBuilderBuild` and `imageBuilderBuildArch`:
+
+```
+Tasks = ...,imageBuilderBuild,imageBuilderBuildArch
+```
+
+And make sure that the `ParentTasks` list contains `imageBuilderBuild`:
+
+```
+ParentTasks = ...,imageBuilderBuild`
+```
