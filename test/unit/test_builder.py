@@ -306,4 +306,78 @@ def test_build_arch_task_seed(koji_mock_kojid):
         ],
     ]
 
+def test_build_arch_task_bootc(koji_mock_kojid):
+    import plugin.builder.image_builder as builder
 
+    t = builder.ImageBuilderBuildArchTask()
+
+    t.id = None
+    t.session = None
+    t.options = MockOptions(topurl="/")
+    t.workdir = None
+
+    t.handler(
+        "Fedora-bootc",
+        "42",
+        "1",
+        "x86_64",
+        ["qcow2"],
+        {"build_tag": "f42-build", "build_tag_name": "f42-build"},
+        {"extra": {"mock.new_chroot": 0}},
+        {"id": 1},
+        {
+            "bootc": {
+                "ref": "quay.io/centos-bootc/centos-bootc:stream9",
+                "build-ref": "quay.io/centos-bootc/centos-bootc:stream10",
+                "default-fs": "ext4",
+            }
+        },
+    )
+
+    assert koji_mock_kojid.buildroot.mock_calls == [
+        [
+            "--cwd",
+            str(koji_mock_kojid.buildroot._tmpdir),
+            "--chroot",
+            "--",
+            "podman",
+            "pull",
+            "quay.io/centos-bootc/centos-bootc:stream9",
+        ],
+        [
+            "--cwd",
+            str(koji_mock_kojid.buildroot._tmpdir),
+            "--chroot",
+            "--",
+            "podman",
+            "pull",
+            "quay.io/centos-bootc/centos-bootc:stream10",
+        ],
+        [
+            "--cwd",
+            str(koji_mock_kojid.buildroot._tmpdir),
+            "--chroot",
+            "--",
+            "sh",
+            str(koji_mock_kojid.buildroot._tmpdir) + "/mock-wrap",
+            "image-builder",
+            "-v",
+            "build",
+            "--use-librepo=false",
+            "--force-repo",
+            "//repos/f42-build/1/$arch",
+            "--with-sbom",
+            "--with-manifest",
+            "--bootc-ref",
+            "quay.io/centos-bootc/centos-bootc:stream9",
+            "--bootc-build-ref",
+            "quay.io/centos-bootc/centos-bootc:stream10",
+            "--bootc-defaultfs",
+            "ext4",
+            "--output-dir",
+            "/builddir/output",
+            "--output-name",
+            "Fedora-bootc-42-1.x86_64",
+            "qcow2",
+        ],
+    ]
