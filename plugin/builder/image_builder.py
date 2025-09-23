@@ -446,6 +446,41 @@ class ImageBuilderBuildArchTask(BaseBuildTask):
             if ostree_parent:
                 cmd.extend(["--ostree-parent", ostree_parent])
 
+        # If bootc information is available pass it on to the command
+        bootc = self.opts.get("bootc")
+        if bootc:
+            # Various containers can be used during the build. `ref` is the contents of
+            # the main artifact. `build-ref` is a custom buildroot. `installer-payload-ref`
+            # is applicable to (some) installer image types that contain an embedded
+            # container.
+            opt_to_arg = {
+                "ref": "--bootc-ref",
+                "build-ref": "--bootc-build-ref",
+                "installer-payload-ref": "--installer-payload-ref",
+            }
+
+            for opt in opt_to_arg:
+                bootc_ref = bootc.get(opt)
+                if bootc_ref:
+                    cmd.extend([opt_to_arg[opt], bootc_ref])
+
+                    # We need to pull the container into local storage, this
+                    # requires the podman executable to be available in our buildroot
+                    exit_code = broot.mock(
+                        ["--cwd", broot.tmpdir(within=True), "--chroot", "--",
+                         "podman", "pull", bootc_ref]
+                    )
+
+                    if exit_code != 0:
+                        raise koji.GenericError(f"`podman` failed to pull container {ref}: {bootc_ref}")
+
+            # image-builder tries to determine the root filesystem to use based
+            # on container metadata and/or contents, for some containers this isnt'
+            # available so there's an option to set it explicitly
+            bootc_default_fs = bootc.get("default-fs")
+            if bootc_default_fs:
+                cmd.extend(["--bootc-default-fs", bootc_default_fs])
+
         # If a seed is set, set it
         seed = opts.get("seed", None)
         if seed is not None:
