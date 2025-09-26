@@ -443,6 +443,48 @@ class ImageBuilderBuildArchTask(BaseBuildTask):
             if ostree_parent:
                 cmd.extend(["--ostree-parent", ostree_parent])
 
+        # If bootc information is available pass it on to the command
+        bootc = self.opts.get("bootc")
+        if bootc:
+            # The general ref is the 'payload' container for the image type
+            bootc_ref = bootc.get("ref")
+            if bootc_ref:
+                cmd.extend(["--bootc-ref", bootc_ref])
+
+                # We need to pull the containers into local storage, this
+                # requires the podman executable to be available in our buildroot
+                exit_code = broot.mock(
+                    ["--cwd", broot.tmpdir(within=True), "--chroot", "--",
+                     "podman", "pull", bootc_ref]
+                )
+
+                if exit_code != 0:
+                    raise koji.GenericError("`podman` failed to pull container")
+
+            # Normally the 'payload' container is used as the build root in
+            # image-builder. This can be overridden with a separate container
+            # reference.
+            bootc_build_ref = bootc.get("build-ref")
+            if bootc_build_ref:
+                cmd.extend(["--bootc-build-ref", bootc_build_ref])
+
+                # Same thing for the build container, it needs to be pulled before
+                # executing `image-builder`.
+                exit_code = broot.mock(
+                    ["--cwd", broot.tmpdir(within=True), "--chroot", "--",
+                     "podman", "pull", bootc_build_ref]
+                )
+
+                if exit_code != 0:
+                    raise koji.GenericError("`podman` failed to pull container")
+
+            # image-builder tries to determine the root filesystem to use based
+            # on container metadata and/or contents, for some containers this isnt'
+            # available so there's an option to set it explicitly
+            bootc_default_fs = bootc.get("default-fs")
+            if bootc_default_fs:
+                cmd.extend(["--bootc-defaultfs", bootc_default_fs])
+
         # If a seed is set, set it
         seed = opts.get("seed", None)
         if seed is not None:

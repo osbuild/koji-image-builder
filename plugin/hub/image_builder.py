@@ -47,6 +47,16 @@ IMAGE_BUILDER_BUILD_SCHEMA = {
                 "url": {"type": "string"},
             },
         },
+        "bootc": {
+            "title": "bootc specific options",
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+                "ref": {"type": "string"},
+                "build-ref": {"type": "string"},
+                "default-fs": {"type": "string"},
+            },
+        },
         "options": {
             "title": "Optional arguments",
             "type": "object",
@@ -74,6 +84,11 @@ IMAGE_BUILDER_BUILD_SCHEMA = {
                     "type": "object",
                     "$ref": "#/definitions/ostree",
                     "descriptions": "Additional ostree options",
+                },
+                "bootc": {
+                    "type": "object",
+                    "$ref": "#/definitions/bootc",
+                    "descriptions": "Additional bootc options",
                 },
                 "blueprint": {
                     "type": "object",

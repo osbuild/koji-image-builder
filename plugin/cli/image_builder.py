@@ -60,6 +60,27 @@ def handle_image_builder_build(gopts, session, args):
     )
 
     parser.add_option(
+        "--bootc-ref",
+        type=str,
+        dest="bootc_ref",
+        help="Ref to the bootable container for bootc image types",
+    )
+
+    parser.add_option(
+        "--bootc-build-ref",
+        type=str,
+        dest="bootc_build_ref",
+        help="Ref to the bootable container build root container for bootc image types",
+    )
+
+    parser.add_option(
+        "--bootc-default-fs",
+        type=str,
+        dest="bootc_default_fs",
+        help="Set the default root filesystem to use when not defined in the container",
+    )
+
+    parser.add_option(
         "--release",
         help="Override release of the output, otherwise determined based on 'target' and 'name'",
     )
@@ -107,12 +128,26 @@ def handle_image_builder_build(gopts, session, args):
     if opts.ostree_url:
         ostree["url"] = opts.ostree_url
 
+    bootc = {}
+
+    if opts.bootc_ref:
+        bootc["ref"] = opts.bootc_ref
+
+    if opts.bootc_build_ref:
+        bootc["build-ref"] = opts.bootc_build_ref
+
+    if opts.bootc_default_fs:
+        bootc["default-fs"] = opts.bootc_default_fs
+
     task_opts = {
         "scratch": opts.scratch,
     }
 
     if ostree:
         task_opts["ostree"] = ostree
+
+    if bootc:
+        task_opts["bootc"] = bootc
 
     if opts.repo:
         task_opts["repos"] = opts.repo
