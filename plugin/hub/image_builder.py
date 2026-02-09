@@ -83,6 +83,10 @@ IMAGE_BUILDER_BUILD_SCHEMA = {
                     "type": "integer",
                     "description": "PRNG seed, can be used to predict filesystem UUIDs",
                 },
+                "preview": {
+                    "type": "boolean",
+                    "description": "Override builds prerelease/preview state."
+                }
             },
         },
     },

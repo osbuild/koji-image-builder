@@ -448,6 +448,12 @@ class ImageBuilderBuildArchTask(BaseBuildTask):
         if seed is not None:
             cmd.extend(["--seed", str(seed)])
 
+        # If the preview state is set, pass it along; requires `image-builder`
+        # >= 49 in the buildroot.
+        preview = opts.get("preview", None)
+        if preview is not None:
+            cmd.extend(["--preview", "true" if preview else "false"])
+
         cmd.extend(["--output-dir", "/builddir/output"])
         cmd.extend(["--output-name", f"{name}-{version}-{release}.{arch}"])
 
