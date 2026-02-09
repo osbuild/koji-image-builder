@@ -80,6 +80,24 @@ def handle_image_builder_build(gopts, session, args):
         type=int,
     )
 
+    parser.add_option(
+        "--preview",
+        help="Set preview to true. Overrides distribution default prerelease status.",
+        dest="preview",
+        action="store_true",
+    )
+
+    parser.add_option(
+        "--no-preview",
+        help="Set preview to false. Overrides distribution default prerelease status.",
+        dest="preview",
+        action="store_false",
+    )
+
+    # this way we have 'None' when not passed which gives the default behavior (e.g.
+    # whatever is set on the distro) and true/false otherwise which always override
+    parser.set_defaults(preview=None)
+
     (opts, args) = parser.parse_args(args)
 
     if len(args) < 4:
@@ -125,6 +143,9 @@ def handle_image_builder_build(gopts, session, args):
 
     if opts.seed:
         task_opts["seed"] = opts.seed
+
+    if opts.preview is not None:
+        task_opts["preview"] = opts.preview
 
     if opts.blueprint:
         with open(opts.blueprint, "r") as f:
