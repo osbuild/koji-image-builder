@@ -86,6 +86,11 @@ IMAGE_BUILDER_BUILD_SCHEMA = {
                 "preview": {
                     "type": "boolean",
                     "description": "Override builds prerelease/preview state."
+                },
+                "failable_arches": {
+                    "type": "array",
+                    "description": "Architectures allowed to fail",
+                    "items": {"type": "string"},
                 }
             },
         },

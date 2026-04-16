@@ -33,6 +33,13 @@ def handle_image_builder_build(gopts, session, args):
         help="Only build provided architectures",
     )
     parser.add_option(
+        "--failable-arch",
+        action="append",
+        dest="failable_arches",
+        default=[],
+        help="Allow an arch to fail without failing the parent task",
+    )
+    parser.add_option(
         "--repo",
         action="append",
         help="Specify a repo that will override the repo used to install "
@@ -150,6 +157,9 @@ def handle_image_builder_build(gopts, session, args):
     if opts.blueprint:
         with open(opts.blueprint, "r") as f:
             task_opts["blueprint"] = json.load(f)
+
+    if opts.failable_arches:
+        task_opts["failable_arches"] = opts.failable_arches
 
     task_id = session.imageBuilderBuild(
         *task_args,
