@@ -197,6 +197,9 @@ class ImageBuilderBuildTask(BuildImageTask):
                     arch=arch,
                 )
 
+                if arch in self.opts.get("failable_arches", []):
+                    canfails.append(subtasks[arch])
+
             results = self.wait(
                 list(subtasks.values()),
                 all=True,

@@ -390,6 +390,7 @@ def build(path):
                     "Fedora-Minimal",
                     FEDORA_VERSION,
                     "minimal-raw-xz",
+                    "--failable-arch", "x86_64",
                 ]
             ),
             check=True,
