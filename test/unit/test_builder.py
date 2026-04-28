@@ -53,6 +53,7 @@ def test_build_arch_task(koji_mock_kojid):
             "//repos/f42-build/1/$arch",
             "--with-sbom",
             "--with-manifest",
+            "--with-rpmlist",
             "--output-dir",
             "/builddir/output",
             "--output-name",
@@ -101,6 +102,7 @@ def test_build_arch_task_with_repos(koji_mock_kojid):
             "c/x86_64/d",
             "--with-sbom",
             "--with-manifest",
+            "--with-rpmlist",
             "--output-dir",
             "/builddir/output",
             "--output-name",
@@ -147,6 +149,7 @@ def test_build_arch_task_multiple_types(koji_mock_kojid):
             "//repos/f42-build/1/$arch",
             "--with-sbom",
             "--with-manifest",
+            "--with-rpmlist",
             "--output-dir",
             "/builddir/output",
             "--output-name",
@@ -168,6 +171,7 @@ def test_build_arch_task_multiple_types(koji_mock_kojid):
             "//repos/f42-build/1/$arch",
             "--with-sbom",
             "--with-manifest",
+            "--with-rpmlist",
             "--output-dir",
             "/builddir/output",
             "--output-name",
@@ -220,6 +224,7 @@ def test_build_arch_task_ostree(koji_mock_kojid):
             "//repos/f42-build/1/$arch",
             "--with-sbom",
             "--with-manifest",
+            "--with-rpmlist",
             "--ostree-url",
             "https://kojipkgs.fedoraproject.org/compose/iot/repo/",
             "--ostree-ref",
@@ -297,6 +302,7 @@ def test_build_arch_task_seed(koji_mock_kojid):
             "//repos/f42-build/1/$arch",
             "--with-sbom",
             "--with-manifest",
+            "--with-rpmlist",
             "--seed", "1234",
             "--output-dir",
             "/builddir/output",
@@ -347,6 +353,7 @@ def test_build_arch_task_preview(koji_mock_kojid):
             "//repos/f42-build/1/$arch",
             "--with-sbom",
             "--with-manifest",
+            "--with-rpmlist",
             "--preview", "false",
             "--output-dir",
             "/builddir/output",
@@ -357,3 +364,22 @@ def test_build_arch_task_preview(koji_mock_kojid):
     ]
 
 
+def test_load_rpmlist_from_output_missing(koji_mock_kojid, tmp_path):
+    import plugin.builder.image_builder as builder
+
+    missing = tmp_path / "not-a-dir"
+    assert builder.load_rpmlist_from_output(str(missing)) == []
+
+
+def test_load_rpmlist_from_output(koji_mock_kojid, tmp_path):
+    import plugin.builder.image_builder as builder
+
+    out = tmp_path / "output"
+    out.mkdir()
+    (out / "img.rpmlist.json").write_text(
+        '[{"name":"mpfr","version":"4.1.0","release":"10.el9","epoch":0,"arch":"x86_64","buildtime":1770637270,"size":331788,"payloadhash":"11c1d6b33b7e64ddc40faf45b949618c829bd2e3d3661132417e4c8aee6ab0fd"}]',
+        encoding="utf-8",
+    )
+    assert builder.load_rpmlist_from_output(str(out)) == [
+        {"name":"mpfr","version":"4.1.0","release":"10.el9","epoch":0,"arch":"x86_64","buildtime":1770637270,"size":331788,"payloadhash":"11c1d6b33b7e64ddc40faf45b949618c829bd2e3d3661132417e4c8aee6ab0fd"},
+    ] 
