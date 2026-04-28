@@ -6,6 +6,10 @@ This project provides [`image-builder`](https://github.com/osbuild/image-builder
 
 To use `koji-image-builder` you'll need to install the relevant plugin package for each corresponding service.
 
+### Version Requirements
+
+`koji-image-builder` runs `image-builder` from a Koji tag/buildroot. `koji-image-builder` requires `image-builder` `>= 48` to be available in the buildroot it is told to use.
+
 ### Builder
 
 Install `koji-image-builder-builder` on your builders (the machines that run `kojid`). After installation enable the service by adding to, or updating its configuration file at `/etc/kojid/kojid.conf`.
