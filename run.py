@@ -11,7 +11,8 @@ import shutil
 import shlex
 import sys
 
-COMPOSE_REPO = "https://kojipkgs.fedoraproject.org/compose/42/latest-Fedora-42/compose/Everything/$arch/os/"
+FEDORA_VERSION = "44"
+COMPOSE_REPO = f"https://kojipkgs.fedoraproject.org/compose/{FEDORA_VERSION}/latest-Fedora-{FEDORA_VERSION}/compose/Everything/$arch/os/"
 
 
 def run_quiet(args, **kwargs):
@@ -49,7 +50,7 @@ def cli(args):
         "-v",
         "./test/data/confs/cli:/opt/cli:z",
         "-v",
-        "./plugin/cli/image_builder.py:/usr/lib/python3.13/site-packages/koji_cli_plugins/image_builder.py:z",
+        "./plugin/cli/image_builder.py:/usr/lib/python3.14/site-packages/koji_cli_plugins/image_builder.py:z",
         "-it",
         "koji-image-builder",
         "/opt/cli/koji",
@@ -59,14 +60,14 @@ def cli(args):
 def koji_setup(path):
     print("- run: setup koji")
 
-    run_quiet(cli(["add-tag", "fedora-42"]))
-    run_quiet(cli(["add-tag", "fedora-42-build", "--arches", "x86_64"]))
+    run_quiet(cli(["add-tag", f"fedora-{FEDORA_VERSION}"]))
+    run_quiet(cli(["add-tag", f"fedora-{FEDORA_VERSION}-build", "--arches", "x86_64"]))
     run_quiet(
         cli(
             [
                 "add-tag-inheritance",
-                "fedora-42",
-                "fedora-42-build",
+                f"fedora-{FEDORA_VERSION}",
+                f"fedora-{FEDORA_VERSION}-build",
             ]
         )
     )
@@ -75,8 +76,8 @@ def koji_setup(path):
             [
                 "add-external-repo",
                 "-t",
-                "fedora-42-build",
-                "osbuild-42-main https://download.copr.fedorainfracloud.org/results/@osbuild/osbuild/fedora-42-x86_64/",
+                f"fedora-{FEDORA_VERSION}-build",
+                f"osbuild-{FEDORA_VERSION}-main https://download.copr.fedorainfracloud.org/results/@osbuild/osbuild/fedora-{FEDORA_VERSION}-x86_64/",
             ]
         )
     )
@@ -85,8 +86,8 @@ def koji_setup(path):
             [
                 "add-external-repo",
                 "-t",
-                "fedora-42-build",
-                "image-builder-42-main https://download.copr.fedorainfracloud.org/results/@osbuild/image-builder/fedora-42-x86_64/",
+                f"fedora-{FEDORA_VERSION}-build",
+                f"image-builder-{FEDORA_VERSION}-main https://download.copr.fedorainfracloud.org/results/@osbuild/image-builder/fedora-{FEDORA_VERSION}-x86_64/",
             ]
         )
     )
@@ -95,31 +96,31 @@ def koji_setup(path):
             [
                 "add-external-repo",
                 "-t",
-                "fedora-42-build",
-                "fedora-42-released",
+                f"fedora-{FEDORA_VERSION}-build",
+                f"fedora-{FEDORA_VERSION}-released",
                 COMPOSE_REPO,
             ]
         )
     )
-    run_quiet(cli(["add-target", "fedora-42", "fedora-42-build", "fedora-42"]))
-    run_quiet(cli(["add-group", "fedora-42-build", "image-builder-build"]))
+    run_quiet(cli(["add-target", f"fedora-{FEDORA_VERSION}", f"fedora-{FEDORA_VERSION}-build", f"fedora-{FEDORA_VERSION}"]))
+    run_quiet(cli(["add-group", f"fedora-{FEDORA_VERSION}-build", "image-builder-build"]))
     run_quiet(
         cli(
             [
                 "add-group-pkg",
-                "fedora-42-build",
+                f"fedora-{FEDORA_VERSION}-build",
                 "image-builder-build",
                 "image-builder",
             ]
         )
     )
 
-    run_quiet(cli(["add-group", "fedora-42-build", "core"]))
+    run_quiet(cli(["add-group", f"fedora-{FEDORA_VERSION}-build", "core"]))
     run_quiet(
         cli(
             [
                 "add-group-pkg",
-                "fedora-42-build",
+                f"fedora-{FEDORA_VERSION}-build",
                 "core",
                 "image-builder",
             ]
@@ -131,7 +132,7 @@ def koji_setup(path):
     )
 
     run_quiet(
-        cli(["edit-tag", "-x", "mock.new_chroot=0", "fedora-42-build"]),
+        cli(["edit-tag", "-x", "mock.new_chroot=0", f"fedora-{FEDORA_VERSION}-build"]),
     )
 
     run_quiet(
@@ -140,13 +141,13 @@ def koji_setup(path):
                 "add-pkg",
                 "--owner",
                 "kojiadmin",
-                "fedora-42",
+                f"fedora-{FEDORA_VERSION}",
                 "Fedora-Minimal",
             ]
         ),
     )
 
-    run_quiet(cli(["regen-repo", "fedora-42-build"]))
+    run_quiet(cli(["regen-repo", f"fedora-{FEDORA_VERSION}-build"]))
 
     pass
 
@@ -385,9 +386,9 @@ def build(path):
                 [
                     "image-builder-build",
                     "--repo", COMPOSE_REPO,
-                    "fedora-42",
+                    f"fedora-{FEDORA_VERSION}",
                     "Fedora-Minimal",
-                    "42",
+                    FEDORA_VERSION,
                     "minimal-raw-xz",
                 ]
             ),
