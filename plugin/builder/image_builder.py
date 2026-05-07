@@ -527,7 +527,9 @@ class ImageBuilderBuildArchTask(BaseBuildTask):
                 self.uploadFile(os.path.join(root, file), remoteName=file)
                 data["files"].append(file)
 
-        data["rpmlist"] = load_rpmlist_from_output(output)
+        rpmlist = load_rpmlist_from_output(output)
+        broot.markExternalRPMs(rpmlist)
+        data["rpmlist"] = rpmlist
 
         broot.expire()
 

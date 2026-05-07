@@ -32,6 +32,9 @@ class MockBuildRoot:
 
         return 0
 
+    def markExternalRPMs(self, args, **kwargs):
+        pass
+
 
 @pytest.fixture
 def koji_mock_kojid(mocker, tmpdir):
