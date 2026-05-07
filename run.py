@@ -161,7 +161,7 @@ def pre_clone(path):
             "clone",
             "--depth",
             "1",
-            "https://pagure.io/koji",
+            "https://forge.fedoraproject.org/koji/koji.git",
             "koji",
         ],
         cwd=pathlib.Path(path),
