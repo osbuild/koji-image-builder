@@ -220,7 +220,7 @@ def pre_setup(path):
 def pre_build(path):
     print("- building container")
     run_quiet(
-        ["podman", "build", "-t", "koji-image-builder", "."],
+        ["podman", "build", "-t", "koji-image-builder", ".", "-v", f"{path}:/opt:z"],
         cwd="./test/data",
     )
 
