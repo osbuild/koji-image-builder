@@ -527,9 +527,11 @@ class ImageBuilderBuildArchTask(BaseBuildTask):
                 self.uploadFile(os.path.join(root, file), remoteName=file)
                 data["files"].append(file)
 
-        rpmlist = load_rpmlist_from_output(output)
-        broot.markExternalRPMs(rpmlist)
-        data["rpmlist"] = rpmlist
+        # Only do the hdrlist when this is a non-scratch build
+        if not self.opts.get("scratch"):
+            rpmlist = load_rpmlist_from_output(output)
+            broot.markExternalRPMs(rpmlist)
+            data["rpmlist"] = rpmlist
 
         broot.expire()
 
