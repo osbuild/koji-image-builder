@@ -109,6 +109,28 @@ def target_repo(topdir, target_info, repo_info):
     return f"{repo}/$arch"
 
 
+def load_rpmlist_from_output(output_dir):
+    """Load *.rpmlist.json files written by image-builder-cli --with-rpmlist.
+    """
+
+    rpmlist = []
+    if not os.path.isdir(output_dir):
+        return rpmlist
+
+    for root, _, files in os.walk(output_dir):
+        for file in files:
+            if not file.endswith(".rpmlist.json"):
+                continue
+            path = os.path.join(root, file)
+            try:
+                with open(path, "r", encoding="utf-8") as f:
+                    rpmlist.extend(json.load(f))
+            except (OSError, UnicodeError, json.JSONDecodeError) as e:
+                logger.warning("skipped rpmlist %s: %s", path, e)
+
+    return rpmlist
+
+
 class ImageBuilderBuildTask(BuildImageTask):
     """Spawns imageBuilderBuildArch tasks."""
 
@@ -424,6 +446,7 @@ class ImageBuilderBuildArchTask(BaseBuildTask):
             [
                 "--with-sbom",
                 "--with-manifest",
+                "--with-rpmlist",
             ]
         )
 
@@ -506,6 +529,12 @@ class ImageBuilderBuildArchTask(BaseBuildTask):
             for file in files:
                 self.uploadFile(os.path.join(root, file), remoteName=file)
                 data["files"].append(file)
+
+        # Only do the hdrlist when this is a non-scratch build
+        if not self.opts.get("scratch"):
+            rpmlist = load_rpmlist_from_output(output)
+            broot.markExternalRPMs(rpmlist)
+            data["rpmlist"] = rpmlist
 
         broot.expire()
 
