@@ -490,7 +490,7 @@ class ImageBuilderBuildArchTask(BaseBuildTask):
         # >= 49 in the buildroot.
         preview = opts.get("preview", None)
         if preview is not None:
-            cmd.extend(["--preview", "true" if preview else "false"])
+            cmd.extend(["--preview={}".format("true" if preview else "false")])
 
         cmd.extend(["--output-dir", "/builddir/output"])
         cmd.extend(["--output-name", f"{name}-{version}-{release}.{arch}"])
