@@ -347,7 +347,7 @@ def test_build_arch_task_preview(koji_mock_kojid):
             "//repos/f42-build/1/$arch",
             "--with-sbom",
             "--with-manifest",
-            "--preview", "false",
+            "--preview=false",
             "--output-dir",
             "/builddir/output",
             "--output-name",
